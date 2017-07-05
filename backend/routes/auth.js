@@ -1,5 +1,7 @@
 const router = new require('express').Router();
 const Users = require('../models/users');
+const Sessions = require('../models/sessions');
+const createToken = require('../helpers/jwt').createToken;
 
 router.post('/login', (req, res) => {
   if (!req.body.username || !req.body.password) {
@@ -24,13 +26,22 @@ router.post('/login', (req, res) => {
       });
     }
 
-    // store session
+    const token = createToken(req.body);
 
-    // generate token
-    return res.status(200).json({
-      data,
-      message: 'Login successful',
-      success: true
+    Sessions.create(req.body.username, token, (err) => {
+      if (err) {
+        return res.status(500).json({
+          message: 'Database unavailable',
+          success: false
+        });
+      }
+
+      return res.status(200).json({
+        data,
+        token,
+        message: 'Login successful',
+        success: true
+      });
     });
   });
 });
@@ -81,7 +92,6 @@ router.post('/users', (req, res) => {
         });
       }
 
-      // generate token
       return res.status(200).json({
         data,
         message: 'User created',
