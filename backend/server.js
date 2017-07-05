@@ -35,7 +35,7 @@ app.set('port', process.env.PORT || config.server.port);
 app.listen(app.get('port'), function() {
   console.log(`*** SERVER listening on ${app.get('port')}`);
   
-  //initSoapService(app);
+  initSoapService(app);
   //callSoapService();
 });
 
