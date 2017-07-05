@@ -1,4 +1,5 @@
 module.exports = {
+  jwtsecret: 'pionix',
   postgres: {
     host: 'localhost',
     database: 'mydb',
@@ -6,6 +7,8 @@ module.exports = {
     port: 5432
   },
   redis: {
+    host: 'localhost',
+    port: 6379
   },
   rabbitmq: {
   },
