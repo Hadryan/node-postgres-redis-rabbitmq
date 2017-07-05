@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="UpdateService"
+   targetNamespace="http://localhost:5656/wsdl/service.wsdl"
+   xmlns="http://schemas.xmlsoap.org/wsdl/"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:tns="http://localhost:5656/wsdl/service.wsdl"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ 
+   <message name="UpdateProjectRequest">
+      <part name="projId" type="xsd:integer"/>
+      <part name="title" type="xsd:string"/>
+   </message>
+  
+   <message name="UpdateProjectResponse">
+      <part name="message" type="xsd:string"/>
+      <part name="success" type="xsd:boolean"/>
+   </message>
+
+   <portType name="UpdatePortType">
+      <operation name="UpdateProject">
+         <input message="tns:UpdateProjectRequest"/>
+         <output message="tns:UpdateProjectResponse"/>
+      </operation>
+   </portType>
+
+   <binding name="UpdateBinding" type="tns:UpdatePortType">
+      <soap:binding style="rpc"
+         transport="http://schemas.xmlsoap.org/soap/http"/>
+      <operation name="UpdateProject">
+         <soap:operation soapAction="UpdateProject"/>
+         <input>
+            <soap:body
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+               namespace="urn:localhost:updateservice"
+               use="encoded"/>
+         </input>
+    
+         <output>
+            <soap:body
+               encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+               namespace="urn:localhost:updateservice"
+               use="encoded"/>
+         </output>
+      </operation>
+   </binding>
+
+   <service name="UpdateService">
+      <documentation>WSDL File for SoapService</documentation>
+      <port binding="tns:UpdateBinding" name="UpdatePort">
+         <soap:address
+            location="http://localhost:5656/wsdl/" />
+      </port>
+   </service>
+</definitions>
