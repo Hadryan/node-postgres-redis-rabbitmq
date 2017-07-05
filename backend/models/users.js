@@ -3,7 +3,7 @@ const query = require('../helpers/query');
 const create = (data, cb) => {
   const values = [data.username, data.password];
 
-  return query('INSERT INTO users (username, password) VALUES($1, $2)', values, cb);
+  return query('INSERT INTO users (username, password) VALUES($1, $2) RETURNING username, id', values, cb);
 };
 
 const find = (username, cb) => {

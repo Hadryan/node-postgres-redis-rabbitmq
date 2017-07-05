@@ -3,7 +3,7 @@ const query = require('../helpers/query');
 const create = (data, cb) => {
   const values = [data.title];
 
-  return query('INSERT INTO projects (title) VALUES($1)', values, cb);
+  return query('INSERT INTO projects (title) VALUES($1) RETURNING *', values, cb);
 };
 
 const find = (title, cb) => {
@@ -23,7 +23,7 @@ const remove = (projId, cb) => {
 const update = (data, cb) => {
   const values = [data.title, data.projId];
 
-  return query('UPDATE projects SET title = $1 WHERE id = $2', values, cb);
+  return query('UPDATE projects SET title = $1 WHERE id = $2 RETURNING *', values, cb);
 };
 
 module.exports = {
