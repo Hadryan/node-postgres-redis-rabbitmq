@@ -7,37 +7,15 @@ const Sessions = require('./models/sessions');
 
 const checkSession = (token, cb) => {
   verifyToken(token, (err, decoded) => {
-    if (err) {
-      throw {
-        Fault: {
-          Code: {
-            Value: 'soap:Sender',
-            Subcode: { value: 'rpc:Unauthorized' }
-          },
-          Reason: { Text: 'Token no longer valid. Please login again' },
-          statusCode: 403
-        }
-      };
-    }
+    if (err) return cb(err);
 
     Sessions.find(decoded.username, (err, result) => {
-      if (err || !result) {
-        throw {
-          Fault: {
-            Code: {
-              Value: 'soap:Sender',
-              Subcode: { value: 'rpc:Unauthorized' }
-            },
-            Reason: { Text: 'Token no longer valid. Please login again' },
-            statusCode: 403
-          }
-        };
-      }
-
-      cb();
+      if (err || !result) return cb(err);
+      
+      cb(null, result);
     });
   })
-}
+};
 
 const soapService = {
   UpdateService: {
@@ -64,7 +42,20 @@ const soapService = {
           token = token.replace('Bearer ', '');
         }
 
-        checkSession(token, () => {
+        checkSession(token, (err, result) => {
+          if (err) {
+            throw {
+              Fault: {
+                Code: {
+                  Value: 'soap:Sender',
+                  Subcode: { value: 'rpc:Unauthorized' }
+                },
+                Reason: { Text: 'Session expired. Please log in again' },
+                statusCode: 403
+              }
+            };
+          }
+
           Projects.update({ projId, title }, (err, data, result) => {
             if (err) {
               if (err.constraint && err.constraint === 'projects_title_key') {
