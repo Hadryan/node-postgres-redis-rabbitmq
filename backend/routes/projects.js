@@ -8,7 +8,7 @@ router.get('/projects', (req, res) => {
   Sessions.find(username, (err, result) => {
     if (err || !result) {
       return res.status(403).json({
-        message: 'Token no longer valid. Please login again',
+        message: 'Session expired. Please log in again',
         success: false
       });
     }
@@ -43,7 +43,7 @@ router.post('/projects', (req, res) => {
   Sessions.find(username, (err, result) => {
     if (err || !result) {
       return res.status(403).json({
-        message: 'Token no longer valid. Please login again',
+        message: 'Session expired. Please log in again',
         success: false
       });
     }
@@ -86,7 +86,7 @@ router.delete('/projects/:id', (req, res) => {
   Sessions.find(username, (err, result) => {
     if (err || !result) {
       return res.status(403).json({
-        message: 'Token no longer valid. Please login again',
+        message: 'Session expired. Please log in again',
         success: false
       });
     }
@@ -129,7 +129,7 @@ router.post('/projects/:id', (req, res) => {
   Sessions.find(username, (err, result) => {
     if (err || !result) {
       return res.status(403).json({
-        message: 'Token no longer valid. Please login again',
+        message: 'Session expired. Please log in again',
         success: false
       });
     }
