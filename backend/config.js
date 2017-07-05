@@ -10,8 +10,6 @@ module.exports = {
     host: 'localhost',
     port: 6379
   },
-  rabbitmq: {
-  },
   server: {
     port: 5656,
     salt_length: 10,
