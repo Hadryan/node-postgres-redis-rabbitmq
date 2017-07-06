@@ -181,13 +181,12 @@ All routes also respond with a `success` and `message` key on the response body,
 
 ### SOAP
 
-Then starting the backend server, the `SOAP server` will start as well.
+When starting the backend server, the `SOAP server` will start as well.
 
-However, since the `SOAP client` must be *called* to access a certain service, I've commented out the function `callSoapClient()`. To call it though upon starting `server.js`, it needs to be uncommented.
+However, since the `SOAP client` must be *called* to access a certain service, I've commented out the function `callSoapClient()`. To call it upon starting `server.js`, it needs to be uncommented.
 
   ```javascript
     app.listen(app.get('port'), function() {
-    
       initSoapService(app);
       callSoapClient();
     });
@@ -202,11 +201,11 @@ To customize the message sent, open `backend/soap/soapClient.js` and modify the 
     };
   ```
 
-The only issues is that, since all requests except auth run through `tokenMiddleware()`, it will be necessary to set an HTTP Authorization Header for this one as well. I managed to make a SOAP request and receive a response using Postman (where you can customize the headers easily), but I couldn't figure it out using the `node-soap` client. Therefore, if you want to check the callSoapService function, you will have to temporarily remove the line
+The only issues is that, since all requests except the public ones run through `tokenMiddleware()`, it will be necessary to set an HTTP Authorization Header for this one as well. I managed to make a SOAP request and receive a response using Postman (where you can customize the headers easily), but I couldn't figure it out using the `node-soap` client. Therefore, to check the callSoapService function you will have to temporarily remove the line
   ```javascript
     app.use('/*', tokenMiddleware);
   ```
-from `routes/index.js`.
+from `backend/routes/index.js`.
 
 ### Notes
 
