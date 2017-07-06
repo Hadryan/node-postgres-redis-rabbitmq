@@ -11,8 +11,6 @@ const soapClient = () => soap.createClient(url, (err, client) => {
     title: 'A brand new title from soapClient'
   };
 
-  client.addSoapHeader(`<token>${sessionToken}</token>`); // replace token received on /login with the one here
-
   client.UpdateProject(args, (err, result, raw) => {
     console.log('SOAP Client: ', raw);
   });
