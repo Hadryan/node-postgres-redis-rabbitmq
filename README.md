@@ -38,7 +38,7 @@ For the daemon there are two options (change to daemon directory first):
 
 * `npm start` to see messages sent and received (and potential errors).
 
-* `npm run daemon` to start a forever process that runs in the background (more or less like a daemon). The process can be stopped by calling `npm run kill`.
+* `npm run daemon` to start a forever process that runs in the background (a daemon). The process can be stopped by calling `npm run kill`.
 
 ### API Routes
 
