@@ -19,7 +19,7 @@ router.post('/login', (req, res) => {
       });
     }
 
-    if (!data) {
+    if (data.length === 0) {
       return res.status(404).json({
         message: 'Username or password incorrect',
         success: false
