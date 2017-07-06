@@ -12,7 +12,7 @@ const soapClient = () => soap.createClient(url, (err, client) => {
   };
 
   client.UpdateProject(args, (err, result, raw) => {
-    console.log('SOAP Client: ', raw);
+    console.log(':: SOAP Client: ', raw);
   });
 });
 

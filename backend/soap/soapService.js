@@ -77,7 +77,7 @@ const soapService = {
 
 const soapServer = (app) => {
   const server = soap.listen(app, '/wsdl', soapService, wsdl);
-  server.log = (type, data) => console.log('SOAP Server: ' + type);
+  server.log = (type, data) => console.log(':: SOAP Server: ' + type);
 };
 
 module.exports = soapServer;
