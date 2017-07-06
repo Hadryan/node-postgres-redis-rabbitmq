@@ -6,8 +6,8 @@ const morgan = require('morgan');
 const config = require('./config');
 const Users = require('./models/users');
 const routeConfig = require('./routes');
-const initSoapService = require('./soapService');
-const callSoapService = require('./soapClient');
+const initSoapService = require('./soap/soapService');
+const callSoapClient = require('./soap/soapClient');
 
 app
   .use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
@@ -36,7 +36,7 @@ app.listen(app.get('port'), function() {
   console.log(`*** SERVER listening on ${app.get('port')}`);
   
   initSoapService(app);
-  //callSoapService();
+  // callSoapClient();
 });
 
 app.timeout = 1000 * 60 * 30;
