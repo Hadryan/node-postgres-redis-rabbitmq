@@ -1,30 +1,20 @@
 const router = new require('express').Router();
 const Projects = require('../models/projects');
-const Sessions = require('../models/sessions');
 
 router.get('/projects', (req, res) => {
   const username = req.user && req.user.username;
 
-  Sessions.find(username, (err, result) => {
-    if (err || !result) {
-      return res.status(403).json({
-        message: 'Session expired. Please log in again',
+  Projects.getAll((err, data) => {
+    if (err) {
+      return res.status(500).json({
+        message: 'Database unavailable',
         success: false
       });
     }
 
-    Projects.getAll((err, data) => {
-      if (err) {
-        return res.status(500).json({
-          message: 'Database unavailable',
-          success: false
-        });
-      }
-
-      return res.status(200).json({
-        data,
-        success: true
-      });
+    return res.status(200).json({
+      data,
+      success: true
     });
   });
 });
@@ -40,34 +30,25 @@ router.post('/projects', (req, res) => {
     });
   }
 
-  Sessions.find(username, (err, result) => {
-    if (err || !result) {
-      return res.status(403).json({
-        message: 'Session expired. Please log in again',
-        success: false
-      });
-    }
-
-    Projects.create({ title }, (err, data) => {
-      if (err) {
-        if (err.constraint && err.constraint === 'projects_title_key') {
-          return res.status(409).json({
-            message: 'Project title already taken',
-            success: false
-          });
-        }
-
-        return res.status(500).json({
-          message: 'Database unavailable',
+  Projects.create({ title }, (err, data) => {
+    if (err) {
+      if (err.constraint && err.constraint === 'projects_title_key') {
+        return res.status(409).json({
+          message: 'Project title already taken',
           success: false
         });
       }
 
-      return res.status(200).json({
-        data,
-        message: 'Project created',
-        success: true
+      return res.status(500).json({
+        message: 'Database unavailable',
+        success: false
       });
+    }
+
+    return res.status(200).json({
+      data,
+      message: 'Project created',
+      success: true
     });
   });
 });
@@ -83,33 +64,24 @@ router.delete('/projects/:id', (req, res) => {
     });
   }
 
-  Sessions.find(username, (err, result) => {
-    if (err || !result) {
-      return res.status(403).json({
-        message: 'Session expired. Please log in again',
+  Projects.remove(projId, (err, data, result) => {
+    if (err) {
+      return res.status(500).json({
+        message: 'Database unavailable',
         success: false
       });
     }
 
-    Projects.remove(projId, (err, data, result) => {
-      if (err) {
-        return res.status(500).json({
-          message: 'Database unavailable',
-          success: false
-        });
-      }
-
-      if (result.rowCount === 0) {
-        return res.status(404).json({
-          message: 'Project id does not exist',
-          success: false
-        });
-      }
-
-      return res.status(200).json({
-        message: 'Project removed',
-        success: true
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        message: 'Project id does not exist',
+        success: false
       });
+    }
+
+    return res.status(200).json({
+      message: 'Project removed',
+      success: true
     });
   });
 });
@@ -126,41 +98,32 @@ router.post('/projects/:id', (req, res) => {
     });
   }
 
-  Sessions.find(username, (err, result) => {
-    if (err || !result) {
-      return res.status(403).json({
-        message: 'Session expired. Please log in again',
+  Projects.update({ projId, title }, (err, data, result) => {
+    if (err) {
+      if (err.constraint && err.constraint === 'projects_title_key') {
+        return res.status(409).json({
+          message: 'Project title already taken',
+          success: false
+        });
+      }
+
+      return res.status(500).json({
+        message: 'Database unavailable',
         success: false
       });
     }
 
-    Projects.update({ projId, title }, (err, data, result) => {
-      if (err) {
-        if (err.constraint && err.constraint === 'projects_title_key') {
-          return res.status(409).json({
-            message: 'Project title already taken',
-            success: false
-          });
-        }
-
-        return res.status(500).json({
-          message: 'Database unavailable',
-          success: false
-        });
-      }
-
-      if (result.rowCount === 0) {
-        return res.status(404).json({
-          message: 'Project id does not exist',
-          success: false
-        });
-      }
-
-      return res.status(200).json({
-        data,
-        message: 'Project updated',
-        success: true
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        message: 'Project id does not exist',
+        success: false
       });
+    }
+
+    return res.status(200).json({
+      data,
+      message: 'Project updated',
+      success: true
     });
   });
 });

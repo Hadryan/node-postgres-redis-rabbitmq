@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Sessions = require('../models/sessions');
 const config = require('../config');
 
 const verifyToken = (token, cb) => {
@@ -35,7 +36,17 @@ const tokenMiddleware = (req, res, next) => {
 
     req.user = user;
     req.token = token;
-    next();
+
+    Sessions.find(user.username, (err, result) => {
+      if (err || !result) {
+        return res.status(403).json({
+          message: 'Session expired. Please log in again',
+          success: false
+        });
+      }
+
+      next();
+    });
   });
 };
 
