@@ -1,4 +1,10 @@
-# pionix-demo
+# node-postgres-redis-rabbitmq
+
+This is a demo project I created to experiment with Node, Postgres, Redis and RabbitMQ.
+
+The backend server exposes a REST API with authentication options and very simple CRUD methods for a projects table in SQL. After login, sessions are stored in Redis as JWT tokens and expire after 5 minutes.
+
+The daemon connects to RabbitMQ and Postgres, waits for changes on the projects table (through triggers) and feeds these as messages to the message queue. A simple consumer deletes these messages once they enter the queue.
 
 ### Table of Contents
 
@@ -128,7 +134,33 @@ All routes also respond with a `success` and `message` key on the response body,
   ```
 
 ##### Update a project
-  `POST localhost:5656/wsdl`
+  `POST localhost:5656/projects/:id`
+  
+  ```javascript
+    Request Headers: {
+      Authorization: Session Token
+    }
+
+    Request Params: {
+      id: Project Id
+    }
+
+    Request Body: {
+      title: String
+    }
+
+    Respone Body: {
+      data: Array[Object]
+    }
+  ```
+
+### SOAP
+
+When starting the backend server, the `SOAP server` will start as well. The only service exposed is UpdateService, with the method UpdateProject.
+
+##### Update project (SOAP alternative)
+
+`POST localhost:5656/wsdl`
 
   <small>*This is the only route that uses SOAP. It still requires the HTTP Authorization Header, however the rest of the request must be sent through text/xml like in the example below.*</small>
   
@@ -155,57 +187,6 @@ All routes also respond with a `success` and `message` key on the response body,
      </soapenv:Body>
     </soapenv:Envelope>
   ```
-
-##### Update a project (REST alternative)
-  `POST localhost:5656/projects/:id`
-
-  <small>*This wasn't required, but it's here in case the SOAP one won't work.*</small>
-  
-  ```javascript
-    Request Headers: {
-      Authorization: Session Token
-    }
-
-    Request Params: {
-      id: Project Id
-    }
-
-    Request Body: {
-      title: String
-    }
-
-    Respone Body: {
-      data: Array[Object]
-    }
-  ```
-
-### SOAP
-
-When starting the backend server, the `SOAP server` will start as well.
-
-However, since the `SOAP client` must be *called* to access a certain service, I've commented out the function `callSoapClient()`. To call it upon starting `server.js`, it needs to be uncommented.
-
-  ```javascript
-    app.listen(app.get('port'), function() {
-      initSoapService(app);
-      callSoapClient();
-    });
-  ```
-
-To customize the message sent, open `backend/soap/soapClient.js` and modify the following object:
-
-  ```javascript
-    const args = {
-      projId: 5,
-      title: 'A brand new title from soapClient'
-    };
-  ```
-
-The only issues is that, since all requests except the public ones run through `tokenMiddleware()`, it will be necessary to set an HTTP Authorization Header for this one as well. I managed to make a SOAP request and receive a response using Postman (where you can customize the headers easily), but I couldn't figure it out using the `node-soap` client. Therefore, to check the callSoapService function you will have to temporarily remove the line
-  ```javascript
-    app.use('/*', tokenMiddleware);
-  ```
-from `backend/routes/index.js`.
 
 ### Notes
 
