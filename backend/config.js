@@ -1,5 +1,5 @@
 module.exports = {
-  jwtsecret: 'pionix',
+  jwtsecret: 'mysecret',
   postgres: {
     host: 'localhost',
     database: 'mydb',
@@ -11,9 +11,7 @@ module.exports = {
     port: 6379
   },
   server: {
-    port: 5656,
-    salt_length: 10,
-    password_length: 8
+    port: 5656
   },
   client: {
     url: 'localhost:3000',
