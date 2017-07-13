@@ -28,9 +28,9 @@ Please make sure that all databases are running before installing and running th
 
 ### Install
 
-Clone project using `git clone https://github.com/timoncp/pionix-demo.git`
+Clone project using `git clone https://github.com/timoncp/node-postgres-redis-rabbitmq`
 
-Change active directory to `pionix-demo` and make bash script executable by running `chmod -x ./init.sh`
+Change active directory to `node-postgres-redis-rabbitmq` and make bash script executable by running `chmod -x ./init.sh`
 
 Run bash script using `./init.sh`. This will install all depencies and initialize Postgres.
 
